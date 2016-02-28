@@ -25,6 +25,8 @@ int currentRed = 0;
 int currentGreen = 0;
 int currentBlue = 0;
 
+double intensity = 1;
+
 void setup()
 {
   Serial.begin(9800);
@@ -34,10 +36,10 @@ void setup()
   pinMode(rubinetto,OUTPUT);
 }
 
-void fade(int red, int green, int blue)
+void fade(int red, int green, int blue, double newIntensity)
 {
-   int valverde = 0;
-   while (currentRed != red || currentGreen != green || currentBlue != blue) {
+   while (currentRed != red || currentGreen != green || currentBlue != blue ||
+          fabs(intensity - newIntensity) > (double)(0.02)) {
        if (currentRed != red) {
            currentRed = currentRed > red ? --currentRed : ++currentRed;
        }
@@ -47,9 +49,13 @@ void fade(int red, int green, int blue)
        if (currentBlue != blue) {
            currentBlue = currentBlue > blue ? --currentBlue : ++currentBlue;
        }
-       analogWrite(ledrosso, currentRed);
-       analogWrite(ledverde, currentGreen);
-       analogWrite(ledblu, currentBlue);
+
+       if (fabs(intensity - newIntensity) > (double)(0.02)) {
+           intensity += intensity > newIntensity ? -0.01 : 0.01;
+       }
+       analogWrite(ledrosso, (int)((double)currentRed * intensity));
+       analogWrite(ledverde, (int)((double)currentGreen * intensity));
+       analogWrite(ledblu, (int)((double)currentBlue * intensity));
        delay(20);
    }
 }
@@ -57,12 +63,12 @@ void fade(int red, int green, int blue)
 //attorno a 250: verde
 //attorno a 1000: rosso
 //valori intermedi: via di mezzo
-void fadeFromSensorValue(int sensorValue)
+void fadeFromSensorValue(int sensorValue, double newIntensity)
 {
     int normalized = ((double)(sensorValue)/(double)1023) * 254;
     Serial.print("Valore sensore normalizzato: ");
     Serial.println(normalized);
-    fade(normalized, 255 - normalized, 0);
+    fade(normalized, 255 - normalized, 0, newIntensity);
 }
 
 void loop()
@@ -93,22 +99,26 @@ void loop()
       numCampioniAsciutto++;
   }
   
-  fadeFromSensorValue(sensorValue);
+  fadeFromSensorValue(sensorValue, 1);
 
   if (numCampioniAsciutto >= 10) {
       digitalWrite(rubinetto, HIGH);
       //chiudi un contatto per 2 secondi poi riaprilo: usabile sia per
       //un rubinetto a relais che per un cazzillo fatto con il servo
-      fade(0, 0, 255);
+      fade(0, 0, 255, 1);
       //da 1 a 30 secondi
       Serial.print("Apro il rubinetto per millisecondi:");
       Serial.println(1000 + (dialValue * 20));
       delay(1000 + (dialValue * 30));
       numCampioniAsciutto = 0;
-      fadeFromSensorValue(analogRead(5));
+      fadeFromSensorValue(analogRead(5), 1);
       digitalWrite(rubinetto, LOW);
   }
 
   delay(1000);
+  Serial.println("Fade sensore");
+  fadeFromSensorValue(sensorValue, 0.01);
+
+  delay(10000);
 }
 
