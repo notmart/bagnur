@@ -89,19 +89,21 @@ void loop()
   Serial.print("Moisture correction: ");
   Serial.println(moistureAdjustment);
 
-  Serial.print(sensorValue + moistureAdjustment);
+  int adjustedMoisture = max(0, min(1024, sensorValue + moistureAdjustment));
+
+  Serial.print(adjustedMoisture);
  
-  if (sensorValue < 150 - moistureAdjustment) { 
+  if (adjustedMoisture < 150 ) { 
       Serial.println(": wet");
       numCampioniAsciutto = 0;
-  } else if (sensorValue >= 150 - moistureAdjustment && sensorValue < 400 - moistureAdjustment) { 
+  } else if (adjustedMoisture >= 150 && adjustedMoisture < 400) { 
       Serial.println(": OK");
   } else { 
       Serial.println(": dry");
       numCampioniAsciutto++;
   }
   
-  fadeFromSensorValue(sensorValue, 1);
+  fadeFromSensorValue(adjustedMoisture, 1);
 
   if (numCampioniAsciutto >= 10) {
       digitalWrite(tapPin, HIGH);
@@ -112,13 +114,15 @@ void loop()
       Serial.println(1000 + (dialValue * 20));
       delay(1000 + (dialValue * 30));
       numCampioniAsciutto = 0;
-      fadeFromSensorValue(analogRead(5), 1);
+      sensorValue = analogRead(5);
+      adjustedMoisture = adjustedMoisture = max(0, min(1024, sensorValue + moistureAdjustment));
+      fadeFromSensorValue(adjustedMoisture, 1);
       digitalWrite(tapPin, LOW);
   }
 
   delay(1000);
   Serial.println("Led Fade");
-  fadeFromSensorValue(sensorValue, 0.01);
+  fadeFromSensorValue(adjustedMoisture, 0.01);
   Serial.println("=========== Wait for next sampling ==============");
  
   delay(10000);
