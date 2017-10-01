@@ -85,7 +85,8 @@ void loop()
   Serial.print("Number of dry samplings:");
   Serial.println(numCampioniAsciutto);
 
-  int moistureAdjustment = ((double)dialValue/(double)1024 - (double)0.5) * 200;
+  //slightly unbalanced towards dry (0.3 instead 0.5) since sensor seems to be a tad too sensible
+  int moistureAdjustment = ((double)dialValue/(double)1024 - (double)0.3) * 200;
   Serial.print("Moisture correction: ");
   Serial.println(moistureAdjustment);
 
