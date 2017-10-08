@@ -107,18 +107,18 @@ void loop()
   fadeFromSensorValue(adjustedMoisture, 1);
 
   if (numCampioniAsciutto >= 10) {
-      digitalWrite(tapPin, HIGH);
       //Open the solenoid-controlled watering tap
       fade(0, 0, 255, 1);
+      digitalWrite(tapPin, HIGH);
       //da 1 a 30 secondi
       Serial.print("Water tap open for milliseconds:");
       Serial.println(1000 + (dialValue * 20));
       delay(1000 + (dialValue * 30));
+      digitalWrite(tapPin, LOW);
       numCampioniAsciutto = 0;
       sensorValue = analogRead(5);
       adjustedMoisture = adjustedMoisture = max(0, min(1024, sensorValue + moistureAdjustment));
       fadeFromSensorValue(adjustedMoisture, 1);
-      digitalWrite(tapPin, LOW);
   }
 
   delay(1000);
