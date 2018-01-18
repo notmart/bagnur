@@ -4,7 +4,7 @@
 *eMail=
 *
 *Project=arduino waterer nano minimal pcb
-*Date=00:28:23
+*Date=00:36:29
 *CreatedBy=Fritzing 0.9.2b.11.19.8d2d5970658f0bed09c661c9ea9a515b5f40f44c
 *
 *
@@ -13,23 +13,23 @@
 *Rotation in degree (0-360, math. pos.)
 *
 *No;Value;Package;X;Y;Rotation;Side;Name
-1;220;THT;34.8686;-11.9546;90;Bottom;R6
-2;;THT;36.1386;-34.8146;90;Bottom;J8
-3;;THT;23.4386;-34.8146;90;Bottom;J7
-4;220;THT;32.3286;-11.9546;90;Bottom;R7
-5;;;57.7286;-65.2946;0;Bottom;Hole3
-6;;THT;29.7886;-19.5746;90;Bottom;J9
-7;;;22.1688;-14.4944;0;Bottom;Via5
-8;;TO220 [THT];10.4846;-27.1946;-90;Bottom;Q3
-9;;power_jack_slot;53.8062;-57.6404;-90;Bottom;J2
-10;;;1.84852;-65.2946;0;Bottom;Hole4
-11;;;1.84852;-1.79469;0;Bottom;Hole2
-12;220;THT;39.9486;-11.9546;90;Bottom;R5
-13;;THT;55.1886;-44.9746;0;Bottom;R8
-14;;THT;36.1386;-4.33459;90;Bottom;J4
-15;;;19.6288;-14.4944;0;Bottom;Via6
-16;;THT;5.65862;-11.9546;90;Bottom;J6
-17;;THT;28.5186;-39.8946;90;Bottom;J3
-18;;THT;5.65862;-4.33459;90;Bottom;J5
-19;;;57.7285;-1.79469;0;Bottom;Hole1
-20;;;22.4861;-61.2715;0;Bottom;IMG1
+1;;;18.2744;-61.7669;0;Bottom;IMG1
+2;;THT;5.65856;-4.33459;90;Bottom;J5
+3;;THT;36.1386;-34.8146;90;Bottom;J8
+4;220;THT;39.9486;-11.9546;90;Bottom;R5
+5;;;57.7285;-65.2946;0;Bottom;Hole3
+6;;THT;28.5186;-39.8946;90;Bottom;J3
+7;;;1.84846;-65.2946;0;Bottom;Hole4
+8;220;THT;34.8686;-11.9546;90;Bottom;R6
+9;;THT;55.1886;-44.9746;0;Bottom;R8
+10;220;THT;32.3286;-11.9546;90;Bottom;R7
+11;;THT;5.65856;-11.9546;90;Bottom;J6
+12;;;22.1687;-14.4944;0;Bottom;Via5
+13;;THT;23.4386;-34.8146;90;Bottom;J7
+14;;THT;29.7886;-19.5746;90;Bottom;J9
+15;;;19.6287;-14.4944;0;Bottom;Via6
+16;;TO220 [THT];10.4846;-27.1946;-90;Bottom;Q3
+17;;THT;36.1386;-4.33459;90;Bottom;J4
+18;;;1.84846;-1.79468;0;Bottom;Hole2
+19;;;57.7285;-1.79468;0;Bottom;Hole1
+20;;power_jack_slot;53.8061;-60.1804;-90;Bottom;J2
