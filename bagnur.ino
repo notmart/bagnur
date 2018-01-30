@@ -68,7 +68,7 @@ void fadeFromSensorValue(int sensorValue, double newIntensity)
     //If intense, do it nuanced, if not, just 3 stages
     if (newIntensity > 0.5) {
         //All the dry samplings are completely red
-        int normalized = ((double)(sensorValue - 500)/(double)523) * 254;
+        int normalized = ((double)(sensorValue)/(double)1024) * 254;
         //Serial.print("Sensor value normalized 0-255: ");
         //Serial.println(normalized);
         fade(normalized, 255 - normalized, 0, newIntensity);
