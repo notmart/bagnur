@@ -4,9 +4,9 @@
 Soil Moisture Chart
  0 : in air @ 24c
  120 : skin
- 0 - 250 : WET
- 300 - 500 : OK
- 500 - 1021 : DRY
+ 0 - 200 : WET
+ 150 - 500 : OK
+ 500 - 1024 : DRY
  
 ------------------------------
 */
@@ -60,15 +60,30 @@ void fade(int red, int green, int blue, double newIntensity)
    }
 }
 
-//around a 250: green
-//around a 1000: red
+//0-150: green
+//around a 500: red
 //valori intermedi: via di mezzo
 void fadeFromSensorValue(int sensorValue, double newIntensity)
 {
-    int normalized = ((double)(sensorValue)/(double)1023) * 254;
-    //Serial.print("Sensor value normalized 0-255: ");
-    //Serial.println(normalized);
-    fade(normalized, 255 - normalized, 0, newIntensity);
+    //If intense, do it nuanced, if not, just 3 stages
+    if (newIntensity > 0.5) {
+        //All the dry samplings are completely red
+        int normalized = ((double)(sensorValue - 500)/(double)523) * 254;
+        //Serial.print("Sensor value normalized 0-255: ");
+        //Serial.println(normalized);
+        fade(normalized, 255 - normalized, 0, newIntensity);
+    } else {
+        // wet
+        if (sensorValue < 200) {
+            fade(0, 255, 0, newIntensity);
+        // ok
+        } else if (sensorValue < 500) {
+            fade(128, 128, 0, newIntensity);
+        // dry
+        } else {
+            fade(255, 0, 0, newIntensity);
+        }
+    }
 }
 
 void loop()
@@ -94,11 +109,14 @@ void loop()
 
   Serial.print(adjustedMoisture);
  
-  if (adjustedMoisture < 150 ) { 
+  if (adjustedMoisture < 200 ) { 
       Serial.println(": wet");
       numCampioniAsciutto = 0;
-  } else if (adjustedMoisture >= 150 && adjustedMoisture < 400) { 
+  } else if (adjustedMoisture >= 200 && adjustedMoisture < 500) { 
       Serial.println(": OK");
+      if (numCampioniAsciutto > 0) {
+          numCampioniAsciutto--;
+      }
   } else { 
       Serial.println(": dry");
       numCampioniAsciutto++;
