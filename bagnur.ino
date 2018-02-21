@@ -148,6 +148,6 @@ void loop()
   fadeFromSensorValue(adjustedMoisture, 0.01);
   Serial.println("=========== Wait for next sampling ==============");
  
-  delay(1000);
+  delay(10000);
 }
 
