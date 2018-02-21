@@ -2,15 +2,18 @@
 
 ------------------------------
 Soil Moisture Chart
- 0 : in air @ 24c
- 120 : skin
- 0 - 200 : WET
- 150 - 500 : OK
+ 1024 : in air @ 24c
+ 200 : tap water
+ 0 - 300 : WET
+ 300 - 500 : OK
  500 - 1024 : DRY
  
 ------------------------------
 */
  
+
+int okValue = 300;
+int dryValue = 500;
 
 int blueLed = 3;
 //use ping 5 because analog
@@ -68,16 +71,17 @@ void fadeFromSensorValue(int sensorValue, double newIntensity)
     //If intense, do it nuanced, if not, just 3 stages
     if (newIntensity > 0.5) {
         //All the dry samplings are completely red
-        int normalized = ((double)(sensorValue)/(double)1024) * 254;
-        //Serial.print("Sensor value normalized 0-255: ");
-        //Serial.println(normalized);
-        fade(normalized, 255 - normalized, 0, newIntensity);
+        double normalized = ((double)(sensorValue)/(double)1024) * 254;
+        Serial.print("Sensor value normalized 0-255: ");
+        Serial.println(normalized);
+        //0.3 taken from rgb to grayscale conversion
+        fade(normalized, ceil((255 - normalized)*0.3), 0, newIntensity);
     } else {
         // wet
-        if (sensorValue < 200) {
+        if (sensorValue <= okValue) {
             fade(0, 255, 0, newIntensity);
         // ok
-        } else if (sensorValue < 500) {
+        } else if (sensorValue <= dryValue) {
             fade(128, 128, 0, newIntensity);
         // dry
         } else {
@@ -100,8 +104,8 @@ void loop()
   Serial.print("Number of dry samplings:");
   Serial.println(numCampioniAsciutto);
 
-  //slightly unbalanced towards dry (0.3 instead 0.5) since sensor seems to be a tad too sensible
-  int moistureAdjustment = ((double)dialValue/(double)1024 - (double)0.3) * 200;
+  //correction from the dial unbalance to 0.3 since water starts at 200
+  int moistureAdjustment = ((double)dialValue/(double)1024 - (double)0.3) * 400;
   Serial.print("Moisture correction: ");
   Serial.println(moistureAdjustment);
 
@@ -109,10 +113,10 @@ void loop()
 
   Serial.print(adjustedMoisture);
  
-  if (adjustedMoisture < 200 ) { 
+  if (adjustedMoisture <= okValue ) { 
       Serial.println(": wet");
       numCampioniAsciutto = 0;
-  } else if (adjustedMoisture >= 200 && adjustedMoisture < 500) { 
+  } else if (adjustedMoisture <= okValue) { 
       Serial.println(": OK");
       if (numCampioniAsciutto > 0) {
           numCampioniAsciutto--;
@@ -130,7 +134,7 @@ void loop()
       digitalWrite(tapPin, HIGH);
       //da 1 a 30 secondi
       Serial.print("Water tap open for milliseconds:");
-      Serial.println(1000 + (dialValue * 20));
+      Serial.println(1000 + (dialValue * 30));
       delay(1000 + (dialValue * 30));
       digitalWrite(tapPin, LOW);
       numCampioniAsciutto = 0;
@@ -144,6 +148,6 @@ void loop()
   fadeFromSensorValue(adjustedMoisture, 0.01);
   Serial.println("=========== Wait for next sampling ==============");
  
-  delay(10000);
+  delay(1000);
 }
 
