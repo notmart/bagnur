@@ -116,7 +116,7 @@ void loop()
   if (adjustedMoisture <= okValue ) { 
       Serial.println(": wet");
       numCampioniAsciutto = 0;
-  } else if (adjustedMoisture <= okValue) { 
+  } else if (adjustedMoisture <= dryValue) { 
       Serial.println(": OK");
       if (numCampioniAsciutto > 0) {
           numCampioniAsciutto--;
